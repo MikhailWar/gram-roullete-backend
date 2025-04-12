@@ -9,6 +9,7 @@ class Base(DeclarativeBase):
 
 
 class TimeMixin:
+    __allow_unmapped__ = True
     created_at: Mapped[datetime.datetime] = mapped_column(
         server_default=func.now()
     )
