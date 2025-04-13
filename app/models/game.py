@@ -15,3 +15,7 @@ class CurrentGame(BaseModel):
     id: int
     end_date: datetime.datetime
     players: typing.List[Player]
+
+
+class Bet(BaseModel):
+    amount: int

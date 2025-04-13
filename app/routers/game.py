@@ -2,6 +2,7 @@ import datetime
 import typing
 
 from fastapi import APIRouter, Depends, HTTPException
+from starlette import status
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from app.config import Config
@@ -10,7 +11,7 @@ from app.database.schemas.user import User, TransactionUser, TransactionType
 from app.database.session import db_repo
 from app.depends.security import get_current_user
 from app.models.base import Response, ResponseMessage
-from app.models.game import CurrentGame, Player
+from app.models.game import CurrentGame, Player, Bet
 from app.models.ws import ResponseWebsocket
 from app.services.jobs.game import end_game_job
 from app.services.single import SingleObj
@@ -62,7 +63,7 @@ async def current_game(
 
 @router.post('/bet', response_model=ResponseMessage)
 async def place_bet(
-        amount: int,
+        bet: Bet,
         user: User = Depends(
             get_current_user
         ),
@@ -70,6 +71,11 @@ async def place_bet(
 
 
     repo = db_repo.get()
+
+
+    current_balance = await repo.users.get_balance(user.id)
+    if bet.amount > current_balance:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Not enough money')
 
     game = await repo.game.get_current_game()
 
@@ -88,7 +94,7 @@ async def place_bet(
     game.players.append(
         PlayerGame(
             user_id=user.id,
-            bet_amount=amount
+            bet_amount=bet.amount
 
         )
     )
@@ -96,9 +102,9 @@ async def place_bet(
     repo.session.add(game)
 
     transaction = TransactionUser(
-        amount=-amount,
+        amount=-bet.amount,
         user_id=user.id,
-        type=TransactionType.BET
+        transaction_type=TransactionType.BET
     )
 
     repo.session.add(transaction)
@@ -122,7 +128,7 @@ async def place_bet(
                     "id": user.id,
                     'name': user.first_name + " " + user.last_name,
                 },
-                "amount": amount,
+                "amount": bet.amount,
                 "game": {
                     'id': game.id,
                     'end_date': game.end_date.timestamp()

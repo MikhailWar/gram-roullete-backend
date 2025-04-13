@@ -64,7 +64,7 @@ class TransactionUser(Base, TimeMixin):
     )
     amount: Mapped[int] = mapped_column()
     user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('users.id', ondelete='CASCADE'))
-    type: Mapped[TransactionType] = mapped_column()
+    transaction_type: Mapped[TransactionType] = mapped_column()
 
 
 

@@ -29,7 +29,7 @@ async def end_game_job(
         transaction = TransactionUser(
             amount=total_amount,
             user_id=player_winner.user_id,
-            type=TransactionType.WIN
+            transaction_type=TransactionType.WIN
         )
         repo.session.add(game)
         repo.session.add(transaction)
