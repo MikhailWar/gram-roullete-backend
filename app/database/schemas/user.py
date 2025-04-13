@@ -30,6 +30,10 @@ class User(Base, TimeMixin):
         default=False, nullable=True
     )
 
+    @property
+    def full_name(self):
+        return (self.first_name + " " + self.last_name).strip()
+
 
 class SessionUser(Base, TimeMixin):
     __tablename__ = "session_users"

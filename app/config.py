@@ -36,6 +36,7 @@ class BotConfig:
 
 class MiscConfig:
     debug: bool = True
+    game_seconds: int = 60
 
 
 @dataclass

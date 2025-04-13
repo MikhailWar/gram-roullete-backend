@@ -6,7 +6,7 @@ from app.database.session import db_repo
 
 
 async def get_current_user(
-        token = Header()
+        token=Header()
 ):
     repo = db_repo.get()
     session_user = await repo.users.get_session(
