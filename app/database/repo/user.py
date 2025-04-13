@@ -1,11 +1,11 @@
 import datetime
 
 from aiogram.utils.web_app import WebAppUser
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.dialects.postgresql import insert
 
 from app.database.repo.base import BaseRepo
-from app.database.schemas.user import SessionUser, User
+from app.database.schemas.user import SessionUser, User, TransactionUser
 from app.services.token import generate_token
 from app.services.webapp import verify_token
 
@@ -85,3 +85,15 @@ class UserRepo(BaseRepo):
             await self.session.commit()
 
         return session_user
+
+    async def get_balance(self, user_id: int) -> int:
+        stmt = select(
+            func.coalesce(
+               func.sum(TransactionUser.amount), 0
+            )
+        ).where(
+            TransactionUser.user_id == user_id
+        )
+
+        response = await self.session.execute(stmt)
+        return response.scalar()

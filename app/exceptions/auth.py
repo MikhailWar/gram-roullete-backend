@@ -1,3 +1,0 @@
-
-class ExceptionInitData(Exception):
-    pass

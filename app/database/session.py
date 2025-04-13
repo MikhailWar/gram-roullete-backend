@@ -17,8 +17,6 @@ sessionmaker = async_sessionmaker(
     engine, expire_on_commit=False, autoflush=False
 )
 
-print(Config.db)
-
 db_repo: ContextVar[RequestRepo] = ContextVar('db_repo')
 
 

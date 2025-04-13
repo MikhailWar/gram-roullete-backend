@@ -3,7 +3,9 @@ from fastapi import APIRouter
 from app.database.session import db_repo
 from app.models.user import AuthenticateBody, SuccessAuthenticate
 
-router = APIRouter()
+router = APIRouter(
+    tags=['Авторизация']
+)
 
 
 @router.post('/authenticate')

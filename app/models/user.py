@@ -9,3 +9,7 @@ class AuthenticateBody(BaseModel):
 
 class SuccessAuthenticate(Response):
     token: str
+
+
+class UserBalance(Response):
+    balance: int

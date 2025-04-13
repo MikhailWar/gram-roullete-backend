@@ -39,7 +39,8 @@ class SessionUser(Base, TimeMixin):
     )
     expiration_date: Mapped[datetime.datetime] = mapped_column()
     user: Mapped['User'] = relationship(
-        foreign_keys=[user_id]
+        foreign_keys=[user_id],
+        lazy='selectin'
     )
 
 
@@ -58,7 +59,9 @@ class TransactionUser(Base, TimeMixin):
         primary_key=True, autoincrement=True
     )
     amount: Mapped[int] = mapped_column()
+    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey('users.id', ondelete='CASCADE'))
     type: Mapped[TransactionType] = mapped_column()
+
 
 
 

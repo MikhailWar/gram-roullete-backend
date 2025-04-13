@@ -5,3 +5,6 @@ class Response(BaseModel):
     success: bool
 
 
+
+class ResponseMessage(BaseModel):
+    message: str

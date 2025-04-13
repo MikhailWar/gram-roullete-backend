@@ -14,7 +14,13 @@ app.add_middleware(
     dispatch=db_session_middleware
 )
 
-app.include_router(
-    router=routers.auth.router,
-    tags=['Авторизация']
-)
+routers = [
+    routers.auth.router,
+    routers.user.router,
+    routers.game.router
+]
+
+for router in routers:
+    app.include_router(
+        router=router
+    )
